@@ -1,20 +1,18 @@
 Name:           deadbeef-mpris2-plugin
-Version:        1.8
+Version:        1.10
 Release:        1%{?dist}
 Summary:        MPRISv2 plugin for the DeaDBeeF music player
 
 License:        GPLv3
-URL:            https://github.com/Serranya/deadbeef-mpris2-plugin
-Source0:        https://github.com/Serranya/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.xz
+URL:            https://github.com/Serranya/%{name}
+Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.xz
 
-BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  deadbeef-devel
-BuildRequires:  glib2-devel
 BuildRequires:  libtool
-Requires:       deadbeef
+BuildRequires:  glib2-devel
+BuildRequires:  deadbeef-devel
 
-Obsoletes:      deadbeef-MPRIS-plugin
+Requires:       deadbeef%{?_isa}
 
 %description
 This plugin aims to implement the MPRISv2 for DeaDBeeF.
@@ -24,25 +22,29 @@ to be orphaned. The original plugin supported MPRISv1 AND MPRISv2. This plugin
 will only support version two.
 
 %prep
-%setup -q -n deadbeef-%{version}
+%autosetup -n deadbeef-%{version}
 
 
 %build
-%configure
-make %{?_smp_mflags}
+%configure \
+ --disable-silent-rules \
+ --disable-static
+%{make_build}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%make_install
+%{make_install}
 rm %{buildroot}%{_libdir}/deadbeef/mpris.*a
 
 
 %files
-%doc
+%doc README
 %{_libdir}/deadbeef/mpris.*
 
 
 %changelog
-* Wed May 27 2015 Vasiliy N. Glazov <vascom2@gmail.com> 1.8-1.R
+* Tue May 08 2018 Leigh Scott <leigh123linux@googlemail.com> - 1.10-1
+- Update to latest release
+
+* Wed May 27 2015 Vasiliy N. Glazov <vascom2@gmail.com> 1.8-1
 - Initial release for fedora
